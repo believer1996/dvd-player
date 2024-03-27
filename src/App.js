@@ -1,25 +1,46 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+export function App() {
 
-function App() {
+  const[result,setResult]=useState([]);
+  let[count,setCount]=useState(0);
+
+  const handleClick=(()=>{
+   count=count+1;
+   setCount(count);
+  })
+
+  async function fetchData(){
+    const data=await fetch('https://content.newtonschool.co/v1/pr/64a277bd01d4ee34c6074e33/moviesList')
+    const response=await data.json();
+    return response;
+  }
+
+useEffect(()=>{
+  fetchData().then((result)=>{
+     setResult(result);
+  })
+},[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div className="app">
+      <h1 > DVD count :{count}</h1>
+      <div className='container'>
+        
+        {result.map((item)=>{
+        return  <div className='card' onClick={handleClick} >
+          <img src={item.backdrop_path} alt={item.title}/>
+          <p> {item.title}</p>
+          </div>
 
-export default App;
+      })}
+         
+      
+      </div>
+
+    </div>
+
+
+  );
+  }
+  
